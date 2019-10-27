@@ -23,16 +23,16 @@ from tensortrade.trades import Trade, TradeType
 class DiscreteActionStrategy(ActionStrategy):
     """Simple discrete strategy, which calculates the trade amount as a fraction of the total balance."""
 
-    def __init__(self, n_actions: int = 20, instrument_symbol: str = 'BTC', max_allowed_slippage_percent: float = 1.0):
+    def __init__(self, position_size: int = 20, instrument_symbol: str = 'BTC', max_allowed_slippage_percent: float = 1.0):
         """
         Arguments:
-            n_actions: The number of bins to divide the total balance by. Defaults to 20 (i.e. 1/20, 2/20, ..., 20/20).
+            position_size: The number of bins to divide the total balance by. Defaults to 20 (i.e. 1/20, 2/20, ..., 20/20).
             instrument_symbol: The exchange symbol of the instrument being traded. Defaults to 'BTC'.
             max_allowed_slippage: The maximum amount above the current price the strategy will pay for an instrument. Defaults to 1.0 (i.e. 1%).
         """
-        super().__init__(action_space=Discrete(n_actions), dtype=np.int64)
+        super().__init__(action_space=Discrete(position_size), dtype=np.int64)
 
-        self.n_actions = n_actions
+        self.position_size = position_size
         self.instrument_symbol = instrument_symbol
         self.max_allowed_slippage_percent = max_allowed_slippage_percent
 
@@ -51,7 +51,7 @@ class DiscreteActionStrategy(ActionStrategy):
 
         For example, 1 = LIMIT_BUY|0.25, 2 = MARKET_BUY|0.25, 6 = LIMIT_BUY|0.5, 7 = MARKET_BUY|0.5, etc.
         """
-        n_splits = self.n_actions / len(TradeType)
+        n_splits = self.position_size / len(TradeType)
         trade_type = TradeType(action % len(TradeType))
         trade_amount = int(action / len(TradeType)) * float(1 / n_splits) + (1 / n_splits)
 
