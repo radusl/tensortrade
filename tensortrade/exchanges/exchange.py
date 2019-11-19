@@ -236,17 +236,11 @@ class Exchange(Component):
         raise NotImplementedError()
 
     def _bind_trade_price(self, price: float) -> float:
-        return min(round(self._max_trade_price, self._base_precision),
-                    max(round(price, self._base_precision),
-                        round(self._min_trade_price, self._base_precision))
-                    )
+        return round(min(self._max_trade_price, max(price, self._min_trade_price)), self._base_precision)
 
 
     def _bind_trade_amount(self, amount: float) -> float:
-        return min(round(self._max_trade_amount, self._instrument_precision),
-                    max(round(amount, self._instrument_precision),
-                        round(self._min_trade_amount, self._instrument_precision))
-                    )
+        return round(min(self._max_trade_amount, max(amount,self._min_trade_amount)), self._base_precision)
 
 
     @abstractmethod
