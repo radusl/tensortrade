@@ -56,8 +56,8 @@ class SimulatedExchange(Exchange):
 
         self.data_frame = data_frame
 
-        self._max_price_slippage_percent = kwargs.get('max_allowed_slippage_percent', 1.0)
-        self._max_amount_slippage_percent = kwargs.get('max_allowed_slippage_percent', 0.0)
+        self._max_price_slippage_percent = kwargs.get('max_allowed_slippage_percent', kwargs.get('_max_price_slippage_percent', 1.0))
+        self._max_amount_slippage_percent = kwargs.get('max_allowed_slippage_percent', kwargs.get('_max_amount_slippage_percent', 0.0))
 
         SlippageModelClass = kwargs.get('slippage_model', RandomUniformSlippageModel)
         self._price_slip_model = SlippageModelClass(min=self._min_trade_price,
@@ -207,7 +207,6 @@ class SimulatedExchange(Exchange):
         self._performance = self._performance.append( log , ignore_index=True)
 
     def execute_trade(self, trade: Trade) -> Trade:
-        # print('execute')
         trade = trade.copy()
         transact_amount = trade.order_amount
         transact_price = trade.order_price
