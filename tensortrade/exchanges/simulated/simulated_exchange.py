@@ -22,7 +22,7 @@ from typing import List, Dict
 from tensortrade.trades import Trade, TradeType
 from tensortrade.exchanges import Exchange
 from tensortrade.features import FeaturePipeline
-
+from tensortrade.slippage import RandomUniformSlippageModel
 
 class SimulatedExchange(Exchange):
     """An exchange, in which the price history is based off the supplied data frame and

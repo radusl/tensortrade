@@ -218,7 +218,7 @@ class Exchange(Component):
         """
         portfolio = self.portfolio
 
-        if symbol in portfolio.keys():
+        if symbol in portfolio:
             return portfolio[symbol]
 
         return 0

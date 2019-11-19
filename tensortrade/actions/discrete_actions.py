@@ -33,28 +33,18 @@ class DiscreteActions(ActionScheme):
     """
 
     def __init__(self, n_actions: int = 20, instrument: str = 'BTC', max_allowed_slippage_percent: float = 1.0):
-        n_actions = self.context.get('n_actions', None) or n_actions
-
-    def __init__(self, n_actions: int = 20, instrument_symbol: str = 'BTC', max_allowed_slippage_percent: float = 1.0):
         """
         Arguments:
             n_actions: The number of bins to divide the total balance by. Defaults to 20 (i.e. 1/20, 2/20, ..., 20/20).
-            instrument_symbol: The exchange symbol of the instrument being traded. Defaults to 'BTC'.
+            instrument: The exchange symbol of the instrument being traded. Defaults to 'BTC'.
         """
         super().__init__(action_space=Discrete(n_actions), dtype=np.int64)
 
-        self.n_actions = n_actions
-        self.instrument_symbol = instrument_symbol
+        self.n_actions = self.context.get('n_actions', None) or n_actions
         self._instrument = self.context.get('instruments', instrument)
-        # self.max_allowed_slippage_percent = \
-        #     self.context.get('max_allowed_slippage_percent', None) or \
-        #     max_allowed_slippage_percent
 
         if isinstance(self._instrument, list):
             self._instrument = self._instrument[0]
-=
-
-
 
     @property
     def dtype(self) -> DTypeString:
@@ -97,8 +87,8 @@ class DiscreteActions(ActionScheme):
         base_precision = self._exchange.base_precision
         instrument_precision = self._exchange.instrument_precision
 
-        amount_held = self._exchange.instrument_balance(self.instrument_symbol)
-        current_price = self._exchange.current_price(symbol=self.instrument_symbol)
+        amount_held = self._exchange.instrument_balance(self._instrument)
+        current_price = self._exchange.current_price(symbol=self._instrument)
 
         balance = self._exchange.balance
 
@@ -109,4 +99,4 @@ class DiscreteActions(ActionScheme):
         elif trade_type.is_sell:
             trade_amount = round(amount_held * trade_amount, instrument_precision)
 
-        return Trade(self.instrument_symbol, trade_type, trade_amount, current_price)
+        return Trade(self._instrument, trade_type, trade_amount, current_price)
