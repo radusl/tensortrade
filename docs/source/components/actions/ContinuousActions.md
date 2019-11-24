@@ -4,11 +4,11 @@ Simple continuous scheme, which calculates the trade amount as a fraction of the
 
 ## Key Variables
 
-- `max_allowed_slippage`
+- `instruments`
   - The exchange symbols of the instruments being traded.
-- `instrument`
+- `actions_per_instrument`
   - The number of bins to divide the total balance by. Defaults to 20 (i.e. 1/20, 2/20, ..., 20/20).
-- `instrument`
+- `actions_per_instrument`
   - The maximum amount above the current price the scheme will pay for an instrument. Defaults to 1.0 (i.e. 1%).
 
 ## Setters & Properties
